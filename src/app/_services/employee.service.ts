@@ -1,28 +1,50 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Employee } from '../_models/employee';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
+  private apiUrl = `${environment.apiUrl}/employees`;
+
   constructor(private http: HttpClient) { }
 
-  getAll() {
-    return this.http.get<any[]>(`${environment.apiUrl}/employees`);
+  getAll(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(this.apiUrl)
+      .pipe(catchError(this.handleError));
   }
 
-  getById(id: number) {
-    return this.http.get<any>(`${environment.apiUrl}/employees/${id}`);
+  getById(id: number): Observable<Employee> {
+    return this.http.get<Employee>(`${this.apiUrl}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
-  create(employee: any) {
-    return this.http.post(`${environment.apiUrl}/employees`, employee);
+  create(employee: Employee): Observable<Employee> {
+    return this.http.post<Employee>(this.apiUrl, employee)
+      .pipe(catchError(this.handleError));
   }
 
-  update(id: number, employee: any) {
-    return this.http.put(`${environment.apiUrl}/employees/${id}`, employee);
+  update(id: number, employee: Employee): Observable<Employee> {
+    return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee)
+      .pipe(catchError(this.handleError));
   }
 
-  delete(id: number) {
-    return this.http.delete(`${environment.apiUrl}/employees/${id}`);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => errorMessage);
   }
 }
