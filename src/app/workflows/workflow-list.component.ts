@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowService } from '../_services/workflow.service';
 import { AlertService } from '../_services/alert.service';
 
@@ -14,7 +14,8 @@ export class WorkflowListComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private workflowService: WorkflowService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -33,5 +34,9 @@ export class WorkflowListComponent implements OnInit {
         },
         error: error => this.alertService.error(error)
       });
+  }
+
+  backToEmployees() {
+    this.router.navigate(['/employees']);
   }
 }

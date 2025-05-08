@@ -17,6 +17,8 @@ const routes: Routes = [
     { path: 'employees', loadChildren: () => import('./employees/employees.module').then(m => m.EmployeesModule), canActivate: [AuthGuard] },
     { path: 'departments', loadChildren: () => import('./departments/departments.module').then(m => m.DepartmentsModule), canActivate: [AuthGuard] },
     { path: 'workflows', loadChildren: () => import('./workflows/workflows.module').then(m => m.WorkflowsModule), canActivate: [AuthGuard] },
+    { path: 'requests', loadChildren: () => import('./requests/requests.module').then(m => m.RequestsModule) },
+    // { path: 'requests', loadChildren: () => import('./requests/requests.module').then(m => m.RequestsModule), canActivate: [AuthGuard] },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];
